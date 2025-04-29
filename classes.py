@@ -11,6 +11,9 @@ class Cliente(Database):
     telefone = CharField()
     endereco = CharField()
 
+    def __str__(self):
+        return f"Nome: {self.nome} \ Telefone: {self.telefone} \ Endereço: {self.endereco}"
+
 class Filme(Database):
     diretor = CharField()
     duracao_minutos = IntegerField()
