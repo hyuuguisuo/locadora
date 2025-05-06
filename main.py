@@ -31,9 +31,9 @@ while(opcao != False):
         cliente = Cliente.create(nome = nome_cli, telefone = telefone_cli, endereco = endereco_cli)
 
     elif (opcao == 2):
-        nome_cli = input("Digite o nome do cliente:\n -> ")
+        id_cli = int(input("Digite o nome do cliente:\n -> "))
 
-        for c in Cliente.select().where(Cliente.nome == nome_cli):
+        for c in Cliente.select().where(Cliente.id == id_cli):
             print(f" -> | {c.nome}")
         
     elif (opcao == 3):
