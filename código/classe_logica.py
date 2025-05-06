@@ -1,13 +1,16 @@
 from datetime import date, timedelta
-from classes import *
+from código.classes_database import *
 
 def verificarQuantidadeFilmes():
-    print("===================|| QUANTIDADE DE FILMES ALUGADOS ||===================\n")
+    print("---- QUANTIDADE DE FILMES ALOCADOS ----")
+
     for c in Locacao.select():
         filme = Filme.get(Filme.id == c.filme)
         print(f" -> | {filme.titulo}")
 
 def realizarLocacao():
+    print("---------- REALIZAR LOCAÇÃO ----------")
+
     id_cli = int(input("DIGITE O ID DO CLIENTE QUE IRÁ REALIZAR A LOCAÇÃO:\n"))
     id_filme = int(input("DIGITE O ID DO FILME QUE SERÁ LOCADO\n"))
     
@@ -22,5 +25,7 @@ def realizarLocacao():
     locacao = Locacao.create(cliente = id_cli, filme = id_filme, dt_locacao = dt_locacao_2, dt_devolucao = dt_devolucao_2, valor = valor_2)
 
 def mostrarTodosClientes():
+    print("---------- MOSTRAR CLIENTES ---------")
+
     for c in Cliente.select():
         print(f" -> | {c.nome}")
