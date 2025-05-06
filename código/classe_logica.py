@@ -2,19 +2,19 @@ from datetime import date, timedelta
 from código.classes_database import *
 
 def verificarQuantidadeFilmes():
-    print("---- QUANTIDADE DE FILMES ALOCADOS ----")
+    print("---- QUANTIDADE DE FILMES ALOCADOS ----\n")
 
     for c in Locacao.select():
         filme = Filme.get(Filme.id == c.filme)
-        print(f" -> | {filme.titulo}")
+        print(f" -> | ID: [{filme.id}]  |  {filme}")
 
 def realizarLocacao():
-    print("---------- REALIZAR LOCAÇÃO ----------")
+    print("---------- REALIZAR LOCAÇÃO ----------\n")
 
     id_cli = int(input("DIGITE O ID DO CLIENTE QUE IRÁ REALIZAR A LOCAÇÃO:\n"))
     id_filme = int(input("DIGITE O ID DO FILME QUE SERÁ LOCADO\n"))
     
-    valor_2 = float(input("DIGITE O VALOR DO FILME:\n"))
+    valor_2 = float(input("DIGITE O VALOR DO FILME (R$):\n"))
     
     dt_locacao_2 = date.today()
     
@@ -24,8 +24,10 @@ def realizarLocacao():
 
     locacao = Locacao.create(cliente = id_cli, filme = id_filme, dt_locacao = dt_locacao_2, dt_devolucao = dt_devolucao_2, valor = valor_2)
 
+    print("A locação foi realizada com sucesso!")
+    print(locacao)
 def mostrarTodosClientes():
-    print("---------- MOSTRAR CLIENTES ---------")
+    print("---------- MOSTRAR CLIENTES ---------\n")
 
     for c in Cliente.select():
         print(f" -> | {c.nome}")

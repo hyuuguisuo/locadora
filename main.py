@@ -6,26 +6,29 @@ import os
 
                                                    # Métodos #
 def cadastrarCliente():
-    print("---------- CADASTRAR CLIENTE -----------")
+    print("---------- CADASTRAR CLIENTE -----------\n")
 
+    nome_cli = input("Digite o nome do cliente:\n -> ")
     telefone_cli = input("Digite o telefone do cliente:\n -> ")
     endereco_cli = input("Digite o endereco do cliente:\n -> ")
-    nome_cli = input("Digite o nome do cliente:\n -> ")
 
     cliente = Cliente.create(nome = nome_cli, telefone = telefone_cli, endereco = endereco_cli)
 
+    print(f"Cliente cadastrado com sucesso!")
+    print(cliente)
+
 
 def buscarCliente():
-    print("----------- BUSCAR CLIENTE -----------")
+    print("----------- BUSCAR CLIENTE -----------\n")
 
     id_cli = int(input("Digite o número de registro do cliente:\n -> "))
 
     for c in Cliente.select().where(Cliente.id == id_cli):
-        print(f" -> | {c.nome}")
+        print(f" -> | {c}")
 
 
 def excluirCliente():
-    print("---------- EXCLUIR CLIENTE ----------")
+    print("---------- EXCLUIR CLIENTE ----------\n")
 
     id_cli = int(input("Digite o número de registro:\n -> "))
     
@@ -49,13 +52,13 @@ def excluirCliente():
         
         cliente.delete_instance()
         
-        print(f" o Cliente {cliente.nome} foi excluído ")
+        print(f" o Cliente {cliente.nome} foi excluído.")
     else:
-        print(f"Não existe o número de registro {id_cli}")
+        print(f"Não existe nenhum registro equivalente à [ {id_cli} ].")
 
 
 def cadastrarFilme():
-    print("----------- CADASTRAR FILME -----------")
+    print("----------- CADASTRAR FILME -----------\n")
 
     titulo_filme= input("Digite o título do filme:\n -> ")
     ano_lancamento_filme= input("Digite o ano de lançamento do filme:\n -> ")
@@ -64,12 +67,14 @@ def cadastrarFilme():
 
     filme = Filme.create(titulo = titulo_filme, ano_lancamento = ano_lancamento_filme, diretor = diretor_filme, duracao_minutos = duracao_minutos_filme)
 
+    print("Filme criado com sucesso!")
+    print(filme)
 
 def verificarDevolucao():
-    print("-------- VERIFICAR DEVOLUÇÃO --------")
+    print("-------- VERIFICAR DEVOLUÇÃO --------\n")
 
-    titulo_filme = input("Digite o nome do filme:\n -> ")
-    devolucao=Filme.select().where(Filme.titulo==titulo_filme).exists()
+    titulo_filme = input("Digite o nome do filme a ser verificado:\n -> ")
+    devolucao = Filme.select().where(Filme.titulo == titulo_filme).exists()
     
 
 
@@ -91,6 +96,7 @@ while(opcao != False):
     print("[4] - Cadastrar filme.")
     print("[5] - Verificar devolução de filmes.")
     print("[6] - Verificar quantidade de filmes alugados.")
+    print("[7] - Realizar uma locação")
     print("[0] - SAIR\n")
     print("......................................\n")
     
@@ -98,6 +104,7 @@ while(opcao != False):
     
     if (opcao == 0):
         opcao = False
+        break
 
     elif (opcao == 1):
         cadastrarCliente()
@@ -117,6 +124,8 @@ while(opcao != False):
     elif (opcao == 6):
         verificarQuantidadeFilmes()
     
+    elif (opcao == 7):
+        realizarLocacao()
     
 
     input("\nAperte ENTER para continuar (...)")
