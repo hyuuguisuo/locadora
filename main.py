@@ -1,5 +1,8 @@
 from código.classes_database import *
+from código.classe_logica import *
+
 import os
+
 
                                                    # Métodos #
 def cadastrarCliente():
@@ -108,8 +111,11 @@ while(opcao != False):
     elif (opcao == 4):
         cadastrarFilme()
     
-    elif(opcao == 5):
+    elif (opcao == 5):
         verificarDevolucao()
+    
+    elif (opcao == 6):
+        verificarQuantidadeFilmes()
     
     
 
