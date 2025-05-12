@@ -1,12 +1,23 @@
 from datetime import date, timedelta
 from código.classes_database import *
 
-def verificarQuantidadeFilmes():
+def verificarFilmesAlugados():
     print("---- QUANTIDADE DE FILMES ALOCADOS ----\n")
+    
+    locacoes = (Locacao.select(Locacao, Filme).join(Filme, JOIN.LEFT_OUTER))
+    encontrou = False
 
-    for c in Locacao.select():
-        filme = Filme.get(Filme.id == c.filme)
-        print(f" -> | ID: [{filme.id}]  |  {filme}")
+    for c in locacoes:
+        encontrou = True
+        if c.filme:
+            print(f" -> | ID: [{c.filme.id}]  |  {c.filme}")
+        else:
+            print(f"[AVISO] Locação ID {c.id} com filme ID {c.filme_id} não existe.")
+
+    if not encontrou:
+        print("Nenhuma locação encontrada.")
+
+        
 
 def realizarLocacao():
     print("---------- REALIZAR LOCAÇÃO ----------\n")
@@ -26,8 +37,9 @@ def realizarLocacao():
 
     print("A locação foi realizada com sucesso!")
     print(locacao)
+
 def mostrarTodosClientes():
     print("---------- MOSTRAR CLIENTES ---------\n")
 
     for c in Cliente.select():
-        print(f" -> | {c.nome}")
+        print(f" -> | ID: [{c.id}]  |  {c.nome}")

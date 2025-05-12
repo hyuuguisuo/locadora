@@ -71,6 +71,8 @@ def cadastrarFilme():
     print(filme)
 
 def verificarDevolucao():
+    ## nao existe ainda as devoluções então deixa quieto por enquanto
+
     print("-------- VERIFICAR DEVOLUÇÃO --------\n")
 
     titulo_filme = input("Digite o nome do filme a ser verificado:\n -> ")
@@ -97,6 +99,7 @@ while(opcao != False):
     print("[5] - Verificar devolução de filmes.")
     print("[6] - Verificar quantidade de filmes alugados.")
     print("[7] - Realizar uma locação")
+    print("[8] - Listar todos os clientes")
     print("[0] - SAIR\n")
     print("......................................\n")
     
@@ -122,10 +125,13 @@ while(opcao != False):
         verificarDevolucao()
     
     elif (opcao == 6):
-        verificarQuantidadeFilmes()
+        verificarFilmesAlugados()
     
     elif (opcao == 7):
         realizarLocacao()
+
+    elif (opcao == 8):
+        mostrarTodosClientes()
     
 
     input("\nAperte ENTER para continuar (...)")
