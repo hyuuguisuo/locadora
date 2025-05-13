@@ -29,7 +29,7 @@ class Locacao(Database):
     dt_locacao = DateTimeField()
     dt_devolucao = DateTimeField()
     valor = DecimalField()
-
+    devolvido=BooleanField(default=False)
     def __str__(self):
 
         msg = f"""

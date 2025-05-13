@@ -76,7 +76,12 @@ def verificarDevolucao():
     print("-------- VERIFICAR DEVOLUÇÃO --------\n")
 
     titulo_filme = input("Digite o nome do filme a ser verificado:\n -> ")
-    devolucao = Filme.select().where(Filme.titulo == titulo_filme).exists()
+    devolucao = Locacao.select().where(Locacao.filme.titulo == titulo_filme).exists()
+    for locacao in devolucao:
+        if(locacao.devolvido==True):
+            print(f"O filme {locacao.filme} foi devolvido ")
+        else:
+            print(f"O filme {locacao.filme} não foi devolvido")    
     
 
 
