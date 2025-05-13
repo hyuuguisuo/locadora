@@ -1,6 +1,6 @@
 from código.classes_database import *
 from código.classe_logica import *
-
+from datetime import date
 import os
 
 
@@ -71,28 +71,44 @@ def cadastrarFilme():
     print(filme)
 
 def verificarDevolucao():
-    ## nao existe ainda as devoluções então deixa quieto por enquanto
+    
 
     print("-------- VERIFICAR DEVOLUÇÃO --------\n")
 
     registro= int(input("Digite o id da locação a  ser verificado:\n -> "))
+     #Faz a busca do id da Locacao
     devolucao = Locacao.get_or_none(Locacao.id==registro)
+    ##Caso for encontrado  vai entrar na condicional, assim vendo se o filme foi devolvido ou não(usamos o id nos dois metodos pois é algo único)
     if(devolucao):
+        ##Se o valor do atributo "devolvido" for True , significa que o filme foi devolvido 
         if(devolucao.devolvido==True):
             print(f"O filme {devolucao.filme} da locação {devolucao.id} foi devolvido ")
         else:
-            print(f"O filme {devolucao.filme} da locação {devolucao.id} não foi devolvido")    
+            print(f"O filme {devolucao.filme} da locação {devolucao.id} não foi devolvido")  
+        
     else:
         print(f"locação não encontrada")
  
 def devolucao():
+      ##Esse método serve para verificar e realizar as devoluções
+      ##O while abaixo serve para caçar o id da locação feita,onde se ela existir o código vai fazer a devolução 
+      ##e se não existir o código pedirá o id da locação novamente
       while(True):
+
         devolver=int (input("Digite o id da locação que você quer devolver: "))
+        ##Aqui a gente cria uma variavel que vai procurar dentro da tabela Locação  o id
         locacao=Locacao.get_or_none(Locacao.id==devolver)
+         ##Esse if vai funcionar caso o Id exista,onde a varivavel criada vai mudar o valor do atributo "devolvido"  dentro da tabela
         if (locacao):
+            #esse if faz o cálculo da multa caso a devolução esteja atrasada,assim comparando a data atual com a tolerância limite
+            if(date.today() > locacao.dt_devolucao):
+                locacao.valor *= 2
+
             locacao.devolvido=True
+            #o valor de "devolvido" é salvo
             locacao.save()
             break
+
         else:
             print(f"locação não encontrada")
             sair=input(f"digite S para sair: ")
