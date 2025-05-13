@@ -33,10 +33,31 @@ def realizarLocacao():
 
     dt_devolucao_2 = dt_locacao_2 + timedelta(days=dias_locacao)
 
-    locacao = Locacao.create(cliente = id_cli, filme = id_filme, dt_locacao = dt_locacao_2, dt_devolucao = dt_devolucao_2, valor = valor_2)
 
-    print("A locação foi realizada com sucesso!")
-    print(locacao)
+
+    ###
+    existeCli = False
+    existeFil = False
+
+
+    for c in Cliente.select():
+        if (c.id == id_cli):
+            existeCli = True
+
+    for c in Filme.select():
+        if (c.id == id_filme):
+            existeFil = True
+
+    if (existeFil == True and existeCli == True):
+        locacao = Locacao.create(cliente = id_cli, filme = id_filme, dt_locacao = dt_locacao_2, dt_devolucao = dt_devolucao_2, valor = valor_2)
+        print("A locação foi realizada com sucesso!")
+        print(locacao)
+    
+    if (existeCli == False):
+        print("Este ID do cliente não existe.")
+
+    if (existeFil == False):
+        print("Este ID do filme não existe.")
 
 def mostrarTodosClientes():
     print("---------- MOSTRAR CLIENTES ---------\n")
