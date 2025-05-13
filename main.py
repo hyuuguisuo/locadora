@@ -75,14 +75,30 @@ def verificarDevolucao():
 
     print("-------- VERIFICAR DEVOLUÇÃO --------\n")
 
-    titulo_filme = input("Digite o nome do filme a ser verificado:\n -> ")
-    devolucao = Locacao.select().where(Locacao.filme.titulo == titulo_filme).exists()
-    for locacao in devolucao:
-        if(locacao.devolvido==True):
-            print(f"O filme {locacao.filme} foi devolvido ")
+    registro= int(input("Digite o id da locação a  ser verificado:\n -> "))
+    devolucao = Locacao.get_or_none(Locacao.id==registro)
+    if(devolucao):
+        if(devolucao.devolvido==True):
+            print(f"O filme {devolucao.filme} da locação {devolucao.id} foi devolvido ")
         else:
-            print(f"O filme {locacao.filme} não foi devolvido")    
-    
+            print(f"O filme {devolucao.filme} da locação {devolucao.id} não foi devolvido")    
+    else:
+        print(f"locação não encontrada")
+ 
+def devolucao():
+      while(True):
+        devolver=int (input("Digite o id da locação que você quer devolver: "))
+        locacao=Locacao.get_or_none(Locacao.id==devolver)
+        if (locacao):
+            locacao.devolvido=True
+            locacao.save()
+            break
+        else:
+            print(f"locação não encontrada")
+            sair=input(f"digite S para sair: ")
+            if(sair.upper()=="S"):
+                break
+
 
 
 ###################################   MAIN   ##########################################################
@@ -105,6 +121,7 @@ while(opcao != False):
     print("[6] - Verificar quantidade de filmes alugados.")
     print("[7] - Realizar uma locação")
     print("[8] - Listar todos os clientes")
+    print("[9] devolver filme")
     print("[0] - SAIR\n")
     print("......................................\n")
     
@@ -137,6 +154,9 @@ while(opcao != False):
 
     elif (opcao == 8):
         mostrarTodosClientes()
+
+    elif(opcao==9):
+        devolucao()    
     
 
     input("\nAperte ENTER para continuar (...)")
