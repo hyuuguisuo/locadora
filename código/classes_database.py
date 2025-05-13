@@ -40,7 +40,7 @@ class Locacao(Database):
         :: para o cliente:  {self.cliente},
         
         com um prazo de 14 dias para devolução.
-        Se o filme não for devolvido até {self.dt_devolucao} o cliente deverá ser multado em XXX R$."""
+        Se o filme não for devolvido até {self.dt_devolucao} o cliente deverá ser multado em {(self.valor*2)} R$."""
 
         return msg
 
