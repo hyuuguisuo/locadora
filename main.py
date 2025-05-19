@@ -1,6 +1,6 @@
 from código.classes_database import *
 from código.classe_logica import *
-from datetime import date
+from datetime import date, datetime
 import os
 
 
@@ -22,10 +22,15 @@ def buscarCliente():
     print("----------- BUSCAR CLIENTE -----------\n")
 
     id_cli = int(input("Digite o número de registro do cliente:\n -> "))
-
+    
+    clienteExiste = False
+    
     for c in Cliente.select().where(Cliente.id == id_cli):
+        clienteExiste = True
         print(f" -> | {c}")
 
+    if (clienteExiste == False):
+        print("Não existe nenhum cliente com este ID")
 
 def excluirCliente():
     print("---------- EXCLUIR CLIENTE ----------\n")
@@ -76,18 +81,32 @@ def verificarDevolucao():
     print("-------- VERIFICAR DEVOLUÇÃO --------\n")
 
     registro= int(input("Digite o id da locação a  ser verificado:\n -> "))
-     #Faz a busca do id da Locacao
-    devolucao = Locacao.get_or_none(Locacao.id==registro)
-    ##Caso for encontrado  vai entrar na condicional, assim vendo se o filme foi devolvido ou não(usamos o id nos dois metodos pois é algo único)
-    if(devolucao):
-        ##Se o valor do atributo "devolvido" for True , significa que o filme foi devolvido 
-        if(devolucao.devolvido==True):
-            print(f"O filme {devolucao.filme} da locação {devolucao.id} foi devolvido ")
+
+    existeLocacao = False
+
+    for l in Locacao.select():
+        if (l.id == registro):
+            existeLocacao = True
         else:
-            print(f"O filme {devolucao.filme} da locação {devolucao.id} não foi devolvido")  
+            existeLocacao = False
+
+    if (existeLocacao == True):
         
+        devolucao = Locacao.get_or_none(Locacao.id==registro)
+
+
+        ##Caso for encontrado  vai entrar na condicional, assim vendo se o filme foi devolvido ou não(usamos o id nos dois metodos pois é algo único)
+        if(devolucao):
+            ##Se o valor do atributo "devolvido" for True , significa que o filme foi devolvido 
+            if(devolucao.devolvido==True):
+                print(f"O filme {devolucao.filme} da locação {devolucao.id} foi devolvido ")
+            else:
+                print(f"O filme {devolucao.filme} da locação {devolucao.id} não foi devolvido")  
+            
+        else:
+            print(f"locação não encontrada")
     else:
-        print(f"locação não encontrada")
+        print("Essa locação nao existe.")
  
 def devolucao():
       ##Esse método serve para verificar e realizar as devoluções
@@ -99,23 +118,42 @@ def devolucao():
         ##Aqui a gente cria uma variavel que vai procurar dentro da tabela Locação  o id
         locacao=Locacao.get_or_none(Locacao.id==devolver)
          ##Esse if vai funcionar caso o Id exista,onde a varivavel criada vai mudar o valor do atributo "devolvido"  dentro da tabela
+        
+        
+        if (locacao.devolvido==True):
+            print("Já foi devolvido")
+            break
+        
         if (locacao):
             #esse if faz o cálculo da multa caso a devolução esteja atrasada,assim comparando a data atual com a tolerância limite
-            if(date.today() > locacao.dt_devolucao):
+            
+            
+            dataHoje = datetime.today()
+
+            if (dataHoje > locacao.dt_devolucao):
                 locacao.valor *= 2
 
-            locacao.devolvido=True
-            #o valor de "devolvido" é salvo
-            locacao.save()
-            break
-
+                locacao.devolvido=True
+                #o valor de "devolvido" é salvo
+                locacao.save()
+                print("Filme devolvido! com atrasos entao cobraremos duas vezes o valor sim")
+                break
+            else:
+                locacao.devolvido = True
+                locacao.save()
+                print("Filme devolvido!")
+                break
         else:
             print(f"locação não encontrada")
             sair=input(f"digite S para sair: ")
             if(sair.upper()=="S"):
                 break
 
+def listarFilmes():
+    print("---------- LISTAR FILMES ---------\n")
 
+    for f in Filme.select():
+        print(f" -> | ID: [{f.id}]  |  {f.titulo}")
 
 ###################################   MAIN   ##########################################################
 
@@ -129,15 +167,9 @@ while(opcao != False):
     os.system("cls")
 
     print("---------------- MENU ----------------")
-    print("[1] - Cadastrar cliente.")
-    print("[2] - Buscar cliente.")    
-    print("[3] - Excluir cliente.")   
-    print("[4] - Cadastrar filme.")
-    print("[5] - Verificar devolução de filmes.")
-    print("[6] - Verificar quantidade de filmes alugados.")
-    print("[7] - Realizar uma locação")
-    print("[8] - Listar todos os clientes")
-    print("[9] devolver filme")
+    print("[1] - Clientes")
+    print("[2] - Filmes")    
+    print("[3] - Locação.")   
     print("[0] - SAIR\n")
     print("......................................\n")
     
@@ -148,32 +180,78 @@ while(opcao != False):
         break
 
     elif (opcao == 1):
-        cadastrarCliente()
+        os.system("cls")
+        print("......................................\n")
+        print("[1] - Cadastrar cliente.")
+        print("[2] - Buscar cliente.")    
+        print("[3] - Excluir cliente.")
+        print("[4] - Listar todos os clientes")
+        print("[0] - SAIR\n")
+        print("......................................\n")
+
+        opcao = int(input("Digite a opção desejada:\n"))
+        
+        if (opcao == 0):
+            opcao = False
+            pass
+        elif (opcao == 1):
+            cadastrarCliente()
+
+        elif (opcao == 2):
+            buscarCliente()
+            
+        elif (opcao == 3):
+            excluirCliente()
+
+        elif (opcao == 4):
+            mostrarTodosClientes() 
 
     elif (opcao == 2):
-        buscarCliente()
+        os.system("cls")
+        print("......................................\n")
+        print("[1] - Cadastrar filme.")
+        print("[2] - Verificar devolução de filmes.")
+        print("[3] - Verificar quantidade de filmes alugados.")
+        print("[4] - Devolver filme")
+        print("[5] - Listar filmes")
+        print("[0] - SAIR\n")
+        print("......................................\n")
         
+        opcao = int(input("Digite a opção desejada:\n"))
+        
+        if (opcao == 0):
+            opcao = False
+            break
+
+        elif (opcao == 1):
+            cadastrarFilme()
+        
+        elif (opcao == 2):
+            verificarDevolucao()
+        
+        elif (opcao == 3):
+            verificarFilmesAlugados()
+        
+        elif(opcao == 4):
+            devolucao()   
+
+        elif (opcao == 5):
+            listarFilmes()
+    
     elif (opcao == 3):
-        excluirCliente()
-
-    elif (opcao == 4):
-        cadastrarFilme()
-    
-    elif (opcao == 5):
-        verificarDevolucao()
-    
-    elif (opcao == 6):
-        verificarFilmesAlugados()
-    
-    elif (opcao == 7):
-        realizarLocacao()
-
-    elif (opcao == 8):
-        mostrarTodosClientes()
-
-    elif(opcao==9):
-        devolucao()    
-    
+        os.system("cls")
+        print("......................................\n")
+        print("[1] - Realizar Locação.")
+        print("[0] - SAIR\n")
+        print("......................................\n")
+        
+        opcao = int(input("Digite a opção desejada:\n"))
+        
+        if (opcao == 0):
+            opcao = False
+            break
+        if (opcao == 1):
+            realizarLocacao()
 
     input("\nAperte ENTER para continuar (...)")
     

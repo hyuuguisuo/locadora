@@ -49,7 +49,7 @@ def realizarLocacao():
             existeFil = True
 
     if (existeFil == True and existeCli == True):
-        locacao = Locacao.create(cliente = id_cli, filme = id_filme, dt_locacao = dt_locacao_2, dt_devolucao = dt_devolucao_2, valor = valor_2)
+        locacao = Locacao.create(cliente = id_cli, filme = id_filme, dt_locacao = dt_locacao_2, dt_devolucao = dt_devolucao_2, valor = valor_2, devolvido = False)
         print("A locação foi realizada com sucesso!")
         print(locacao)
     
