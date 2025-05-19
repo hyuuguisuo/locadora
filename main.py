@@ -112,42 +112,51 @@ def devolucao():
       ##Esse método serve para verificar e realizar as devoluções
       ##O while abaixo serve para caçar o id da locação feita,onde se ela existir o código vai fazer a devolução 
       ##e se não existir o código pedirá o id da locação novamente
-      while(True):
+      
+    locacao_existe = False
+    for l in Locacao.select():
+        locacao_existe = True
+      
+    if locacao_existe:
+          
+        while(True):
 
-        devolver=int (input("Digite o id da locação que você quer devolver: "))
-        ##Aqui a gente cria uma variavel que vai procurar dentro da tabela Locação  o id
-        locacao=Locacao.get_or_none(Locacao.id==devolver)
-         ##Esse if vai funcionar caso o Id exista,onde a varivavel criada vai mudar o valor do atributo "devolvido"  dentro da tabela
-        
-        
-        if (locacao.devolvido==True):
-            print("Já foi devolvido")
-            break
-        
-        if (locacao):
-            #esse if faz o cálculo da multa caso a devolução esteja atrasada,assim comparando a data atual com a tolerância limite
+            devolver=int (input("Digite o id da locação que você quer devolver: "))
+            ##Aqui a gente cria uma variavel que vai procurar dentro da tabela Locação  o id
+            locacao=Locacao.get_or_none(Locacao.id==devolver)
+            ##Esse if vai funcionar caso o Id exista,onde a varivavel criada vai mudar o valor do atributo "devolvido"  dentro da tabela
             
             
-            dataHoje = datetime.today()
-
-            if (dataHoje > locacao.dt_devolucao):
-                locacao.valor *= 2
-
-                locacao.devolvido=True
-                #o valor de "devolvido" é salvo
-                locacao.save()
-                print("Filme devolvido! com atrasos entao cobraremos duas vezes o valor sim")
+            if (locacao.devolvido==True):
+                print("Já foi devolvido")
                 break
+            
+            if (locacao):
+                #esse if faz o cálculo da multa caso a devolução esteja atrasada,assim comparando a data atual com a tolerância limite
+                
+                
+                dataHoje = datetime.today()
+
+                if (dataHoje > locacao.dt_devolucao):
+                    locacao.valor *= 2
+
+                    locacao.devolvido=True
+                    #o valor de "devolvido" é salvo
+                    locacao.save()
+                    print("Filme devolvido! com atrasos entao cobraremos duas vezes o valor sim")
+                    break
+                else:
+                    locacao.devolvido = True
+                    locacao.save()
+                    print("Filme devolvido!")
+                    break
             else:
-                locacao.devolvido = True
-                locacao.save()
-                print("Filme devolvido!")
-                break
-        else:
-            print(f"locação não encontrada")
-            sair=input(f"digite S para sair: ")
-            if(sair.upper()=="S"):
-                break
+                print(f"locação não encontrada")
+                sair=input(f"digite S para sair: ")
+                if(sair.upper()=="S"):
+                    break
+    else:
+        print("Não é possível devolver algum filme, nenhuma locação foi realizada ainda.")
 
 def listarFilmes():
     print("---------- LISTAR FILMES ---------\n")
