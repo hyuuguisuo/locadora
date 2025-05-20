@@ -166,15 +166,11 @@ def listarFilmes():
 
 ###################################   MAIN   ##########################################################
 
-
-
-print("============ VIDEOLOCADORA ============")
-
 opcao = True
 
 while(opcao != False):
     os.system("cls")
-
+    
     print("---------------- MENU ----------------")
     print("[1] - Clientes")
     print("[2] - Filmes")    

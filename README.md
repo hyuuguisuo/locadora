@@ -1,3 +1,0 @@
-# locadora
-
-me leia
