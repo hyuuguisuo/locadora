@@ -4,28 +4,59 @@ from código.classe_logica import *
 import tkinter as tk
 from tkinter import messagebox
 
-janela = tk.Tk()
-janela.geometry("550x800")
+lista_id = []
 
-FONTE = ("Comic Sans MS", 20, "bold")
+def atualizarCliente():
+    listbox.delete(0, tk.END)
+    lista_id.clear()
+    
+    for c in Cliente.select():
+        listbox.insert(tk.END, c.nome)
+        lista_id.append(c.id)
+    
+    print(f"lista: {lista_id}")
 
-def preencherDados(event):
+def editarCliente():
     selecao = listbox.curselection()
 
     if selecao:
-        indice = selecao[0]
-        texto = listbox.get(indice)
-        # print(f"Selecionou: {texto}")
+        index = selecao[0]
+        id = lista_id[index]
         
+        texto = listbox.get(index)
+        print(f"Indice: {index}, texto: {texto}, id: {id}")
+
         for c in Cliente.select():
-            if c.nome == texto:
+            if c.id == id:
                 entry_nome.config(textvariable=(tk.StringVar(value=(c.nome))))
                 entry_telefone.config(textvariable=(tk.StringVar(value=(c.telefone))))
                 entry_endereco.config(textvariable=(tk.StringVar(value=(c.endereco))))
                 print("Achou", texto)
 
+def excluirCliente():
+    selecao = listbox.curselection()
 
+    if selecao:
+        index = selecao[0]
+        id = lista_id[index]
+        
+        cliente_existe = Cliente.select().where(Cliente.id == id).exists()
 
+        if cliente_existe:
+            cliente=Cliente.get_by_id(id)
+
+            cliente.delete_instance()
+        
+            print(f" o Cliente {cliente.nome} foi excluído.")
+            listbox.delete(index)
+        else:
+            print(f"Não existe nenhum registro equivalente à [ {id} ].")
+
+def preencherListBox(listbox):  
+    for c in Cliente.select():
+        print(f"id: {c.id}, nome: {c.nome}")
+        listbox.insert(c.id, c.nome)
+                
 
 def cadastrarCliente(nome_cli, telefone_cli, endereco_cli):
 
@@ -33,6 +64,7 @@ def cadastrarCliente(nome_cli, telefone_cli, endereco_cli):
     
     print(f"Cliente cadastrado com sucesso!")
     print(cliente)
+    listbox.insert(cliente.id, nome_cli)
 
 def limparValores():
     entry_nome.config(textvariable=(tk.StringVar(value="")))
@@ -49,23 +81,30 @@ def resgatarValores():
         return
 
     cadastrarCliente(nome, telefone, endereco)
-    listbox.insert(tk.END, nome)
+    messagebox.showinfo("3º INFO", f"Deu certo cadastrou o  {nome} .")
     limparValores()
 
+janela = tk.Tk()
+janela.geometry("650x800")
 
-label_titulo = tk.Label(janela, text="Clientes", font=(FONTE)).grid(column=0, row=0, columnspan=2, padx=200)
+FONTE = ("Comic Sans MS", 20, "bold")
 
+janela.columnconfigure
+label_titulo = tk.Label(janela, text="Clientes", font=(FONTE)).grid(column=0, row=0, columnspan=3, padx=200)
 
 label_nome = tk.Label(janela, text="Nome: ", font=(FONTE)).grid(column=0, row=1)
+
 entry_nome = tk.Entry(janela, font=(FONTE))
 entry_nome.grid(column=1, row=1)
 
 label_telefone = tk.Label(janela, text="Telefone: ", font=(FONTE)).grid(column=0, row=2)
+
 entry_telefone = tk.Entry(janela, font=(FONTE))
 entry_telefone.grid(column=1, row=2)
 
 
 label_endereco = tk.Label(janela, text="Endereço: ", font=(FONTE)).grid(column=0, row=3)
+
 entry_endereco = tk.Entry(janela, font=(FONTE))
 entry_endereco.grid(column=1, row=3)
 
@@ -78,8 +117,21 @@ button_limpar.grid(column=1, row=4, pady=15)
 
 
 listbox = tk.Listbox(janela, width=85, height=25)
-listbox.grid(column=0, row=5, columnspan=2, padx=10)
+listbox.grid(column=0, row=5, columnspan=3, padx=10)
 
-listbox.bind("<<ListboxSelect>>", preencherDados)
+
+button_editar =  tk.Button(janela, text="editar", font=(FONTE), command=editarCliente)
+button_editar.grid(column=0, row=6, pady=15)
+
+button_excluir =  tk.Button(janela, text="excluir", font=(FONTE), command=excluirCliente)
+button_excluir.grid(column=1, row=6, pady=15)
+
+button_atualizar =  tk.Button(janela, text="atualizar", font=(FONTE), command=atualizarCliente)
+button_atualizar.grid(column=2, row=6, pady=15)
+
+
+preencherListBox(listbox)
+atualizarCliente()
+
 
 janela.mainloop()
