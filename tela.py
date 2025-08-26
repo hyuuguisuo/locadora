@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 lista_id = []
+editando = [False, -1, -1]
 
 def atualizarCliente():
     listbox.delete(0, tk.END)
@@ -23,6 +24,10 @@ def editarCliente():
         index = selecao[0]
         id = lista_id[index]
         
+        editando[0] = True
+        editando[1] = id
+        editando[2] = index
+
         texto = listbox.get(index)
         print(f"Indice: {index}, texto: {texto}, id: {id}")
 
@@ -52,6 +57,8 @@ def excluirCliente():
         else:
             print(f"Não existe nenhum registro equivalente à [ {id} ].")
 
+    atualizarCliente()
+
 def preencherListBox(listbox):  
     for c in Cliente.select():
         print(f"id: {c.id}, nome: {c.nome}")
@@ -65,6 +72,22 @@ def cadastrarCliente(nome_cli, telefone_cli, endereco_cli):
     print(f"Cliente cadastrado com sucesso!")
     print(cliente)
     listbox.insert(cliente.id, nome_cli)
+
+def atualizarDados(nome_cli, telefone_cli, endereco_cli):
+    cliente = Cliente.get(Cliente.id == editando[1])
+
+    cliente.nome = nome_cli
+    cliente.telefone = telefone_cli
+    cliente.endereco = endereco_cli
+
+    cliente.save()
+
+    print(f"Cliente atualizado com sucesso!")
+    print(cliente)
+
+    listbox.delete(editando[2])
+    listbox.insert(editando[2], nome_cli)
+
 
 def limparValores():
     entry_nome.config(textvariable=(tk.StringVar(value="")))
@@ -80,18 +103,30 @@ def resgatarValores():
         messagebox.showerror("ERROR_sans", "É necessário inserir os valores para salvar.")
         return
 
-    cadastrarCliente(nome, telefone, endereco)
-    messagebox.showinfo("3º INFO", f"Deu certo cadastrou o  {nome} .")
-    limparValores()
+    if (editando[0] == True):
+        atualizarDados(nome, telefone, endereco)
 
+        editando[0] = False
+        editando[1] = -1
+        editando[2] = -1
+
+
+    else:
+        cadastrarCliente(nome, telefone, endereco)
+        messagebox.showinfo("3º INFO", f"Deu certo cadastrou o  {nome} .")
+    limparValores()
+    atualizarCliente()
+
+# tela # 
 janela = tk.Tk()
 janela.geometry("650x800")
 
 FONTE = ("Comic Sans MS", 20, "bold")
 
 janela.columnconfigure
-label_titulo = tk.Label(janela, text="Clientes", font=(FONTE)).grid(column=0, row=0, columnspan=3, padx=200)
 
+
+label_titulo = tk.Label(janela, text="Clientes", font=(FONTE)).grid(column=0, row=0, columnspan=3, padx=200)
 label_nome = tk.Label(janela, text="Nome: ", font=(FONTE)).grid(column=0, row=1)
 
 entry_nome = tk.Entry(janela, font=(FONTE))
@@ -102,11 +137,11 @@ label_telefone = tk.Label(janela, text="Telefone: ", font=(FONTE)).grid(column=0
 entry_telefone = tk.Entry(janela, font=(FONTE))
 entry_telefone.grid(column=1, row=2)
 
-
 label_endereco = tk.Label(janela, text="Endereço: ", font=(FONTE)).grid(column=0, row=3)
 
 entry_endereco = tk.Entry(janela, font=(FONTE))
 entry_endereco.grid(column=1, row=3)
+
 
 
 button_salvar =  tk.Button(janela, text="salvar", font=(FONTE), command=resgatarValores)
@@ -129,9 +164,8 @@ button_excluir.grid(column=1, row=6, pady=15)
 button_atualizar =  tk.Button(janela, text="atualizar", font=(FONTE), command=atualizarCliente)
 button_atualizar.grid(column=2, row=6, pady=15)
 
-
 preencherListBox(listbox)
-atualizarCliente()
 
+atualizarCliente()
 
 janela.mainloop()
