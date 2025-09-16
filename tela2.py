@@ -41,6 +41,35 @@ def editarFilme():
                 print("Achou", texto)
 
 
+def excluirFilme():
+    selecao = listbox.curselection()
+
+    if selecao:
+        index = selecao[0]
+        id = lista_id[index]
+        
+        filme_existe = Filme.select().where(Filme.id == id).exists()
+
+        if filme_existe:
+            filme=Filme.get_by_id(id)
+
+            filme.delete_instance()
+        
+            print(f" O filme {filme.titulo} foi excluído.")
+            listbox.delete(index)
+        else:
+            print(f"Não existe nenhum registro equivalente à [ {id} ].")
+
+    atualizarFilme()
+
+
+
+
+
+
+
+
+
 def preencherListBox(listbox):  
     for c in Filme.select():
         print(f"id: {c.id}, nome: {c.titulo}")
@@ -92,7 +121,7 @@ def resgatarValores():
         atualizarDados(diretor, duracao, titulo , ano)
 
         editando[0] = False
-        editando[1] = -1
+        editando[1] = -1,
         editando[2] = -1
 
 
@@ -151,6 +180,9 @@ button_editar.grid(column=0, row=6, pady=10, padx=10, sticky="e")
 
 button_atualizar = tk.Button(janela, text="Atualizar", font=FONTE, command=atualizarFilme)
 button_atualizar.grid(column=1, row=6, pady=10, padx=10, sticky="w")
+
+button_excluir =  tk.Button(janela, text="excluir", font=(FONTE), command=excluirFilme)
+button_excluir.grid(column=1, row=6,padx=200, pady=15)
 
 # Linha 7 - Listbox
 listbox = tk.Listbox(janela, width=85, height=25)
