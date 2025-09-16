@@ -12,7 +12,7 @@ def atualizarFilme():
     lista_id.clear()
     
     for c in Filme.select():
-        listbox.insert(tk.END, c.nome)
+        listbox.insert(tk.END, c.titulo)
         lista_id.append(c.id)
     
     print(f"lista: {lista_id}")
@@ -32,7 +32,7 @@ def editarFilme():
         texto = listbox.get(index)
         print(f"Indice: {index}, texto: {texto}, id: {id}")
 
-        for c in Cliente.select():
+        for c in Filme.select():
             if c.id == id:
                 entry_diretor.config(textvariable=(tk.StringVar(value=(c.diretor))))
                 entry_duracao_minutos.config(textvariable=(tk.StringVar(value=(c.duracao_minutos))))
