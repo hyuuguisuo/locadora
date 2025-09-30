@@ -45,12 +45,12 @@ def listarClientes():
         print(f"id: {cliente.id}, nome: {cliente.nome}")
         listbox_cli.insert(cliente.id, f"{cliente.id} : : {cliente.nome}")
 
-def cadastrarCliente():
+def cadastrarCliente(self):
     global editando_cli
 
-    nome = (entry_nome.get())
-    endereco = (entry_endereco.get())
-    telefone = (entry_telefone.get())
+    nome = (self.entry_nome.get())
+    endereco = (self.entry_endereco.get())
+    telefone = (self.entry_telefone.get())
 
     if not nome or not endereco or not telefone:
         messagebox.showerror("ERROR_sans", "É necessário inserir os valores para salvar.")
@@ -60,9 +60,9 @@ def cadastrarCliente():
         Cliente.create(nome = nome, telefone = telefone, endereco = endereco) 
         messagebox.showinfo("3º INFO", f"Deu certo cadastrou o  {nome} .")
         listarClientes()
-        entry_nome.delete(0, tk.END)
-        entry_endereco.delete(0, tk.END)
-        entry_telefone.delete(0, tk.END)
+        self.entry_nome.delete(0, tk.END)
+        self.entry_endereco.delete(0, tk.END)
+        self.entry_telefone.delete(0, tk.END)
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao cadastrar: {e}")
 
@@ -83,16 +83,16 @@ def excluirCliente():
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao excluir....: {e}")
 
-def editarCliente():
+def editarCliente(self):
     global editando_cli
 
     print(f"estou editando: {editando_cli}")
     if (editando_cli != None):
         try:
             cliente = Cliente.get_by_id(editando_cli)
-            novo_nome = (entry_nome.get())
-            novo_endereco = (entry_endereco.get())
-            novo_telefone = (entry_telefone.get())
+            novo_nome = (self.entry_nome.get())
+            novo_endereco = (self.entry_endereco.get())
+            novo_telefone = (self.entry_telefone.get())
             if not novo_nome or not novo_endereco or not novo_telefone:
                 messagebox.showwarning("Atenção", "tem que colocar as coisas")
                 return
@@ -112,7 +112,7 @@ def editarCliente():
     else:
          messagebox.showerror("Erro", f"Selecione um cliente para editar: {e}")
 
-def preencherListbox_Cliente(event):
+def preencherListbox_Cliente(self, event):
     global editando_cli
     
     selecionado = listbox_cli.curselection()
@@ -127,9 +127,9 @@ def preencherListbox_Cliente(event):
 
         if (cliente):    
             editando_cli = cliente_id
-            entry_nome.config(textvariable=(tk.StringVar(value=(cliente.nome))))
-            entry_telefone.config(textvariable=(tk.StringVar(value=(cliente.telefone))))
-            entry_endereco.config(textvariable=(tk.StringVar(value=(cliente.endereco))))
+            self.entry_nome.config(textvariable=(tk.StringVar(value=(cliente.nome))))
+            self.entry_telefone.config(textvariable=(tk.StringVar(value=(cliente.telefone))))
+            self.entry_endereco.config(textvariable=(tk.StringVar(value=(cliente.endereco))))
             print(f"estou editando: {editando_cli}")
             
 editando_cli = None
@@ -139,18 +139,18 @@ frame_cliente.columnconfigure
 label_titulo = tk.Label(frame_cliente, text="Clientes", font=(FONTE)).grid(column=0, row=0, columnspan=3, padx=200)
 label_nome = tk.Label(frame_cliente, text="Nome: ", font=(FONTE)).grid(column=0, row=1)
 
-entry_nome = tk.Entry(frame_cliente, font=(FONTE))
-entry_nome.grid(column=1, row=1)
+self.entry_nome = tk.Entry(frame_cliente, font=(FONTE))
+self.entry_nome.grid(column=1, row=1)
 
 label_telefone = tk.Label(frame_cliente, text="Telefone: ", font=(FONTE)).grid(column=0, row=2)
 
-entry_telefone = tk.Entry(frame_cliente, font=(FONTE))
-entry_telefone.grid(column=1, row=2)
+self.entry_telefone = tk.Entry(frame_cliente, font=(FONTE))
+self.entry_telefone.grid(column=1, row=2)
 
 label_endereco = tk.Label(frame_cliente, text="Endereço: ", font=(FONTE)).grid(column=0, row=3)
 
-entry_endereco = tk.Entry(frame_cliente, font=(FONTE))
-entry_endereco.grid(column=1, row=3)
+self.entry_endereco = tk.Entry(frame_cliente, font=(FONTE))
+self.entry_endereco.grid(column=1, row=3)
 
 button_cadastrar =  tk.Button(frame_cliente, text="Cadastrar", font=(FONTE), command=cadastrarCliente)
 button_cadastrar.grid(column=0, row=4, pady=30)
@@ -183,10 +183,10 @@ def listarFilmes():
 def cadastrarFilme():
     global editando_filme
 
-    titulo = (entry_titulo.get())
-    diretor = (entry_diretor.get())
-    duracao = (entry_duracao_minutos.get())
-    ano = (entry_ano_lancamento.get())
+    titulo = (self.entry_titulo.get())
+    diretor = (self.entry_diretor.get())
+    duracao = (self.entry_duracao_minutos.get())
+    ano = (self.entry_ano_lancamento.get())
 
     if not titulo or not diretor or not duracao or not ano:
         messagebox.showerror("ERROR_sans", "É necessário inserir os valores para salvar.")
@@ -196,10 +196,10 @@ def cadastrarFilme():
         Filme.create(titulo = titulo, diretor = diretor, duracao = duracao, ano = ano) 
         messagebox.showinfo("3º INFO", f"Deu certo cadastrou o filme  {titulo} .")
         listarFilmes()
-        entry_titulo.delete(0, tk.END)
-        entry_diretor.delete(0, tk.END)
-        entry_duracao_minutos.delete(0, tk.END)
-        entry_ano_lancamento.delete(0, tk.END)
+        self.entry_titulo.delete(0, tk.END)
+        self.entry_diretor.delete(0, tk.END)
+        self.entry_duracao_minutos.delete(0, tk.END)
+        self.entry_ano_lancamento.delete(0, tk.END)
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao cadastrar o filme: {e}")
@@ -227,12 +227,12 @@ def editarFilme():
     if (editando_filme != None):
         try:
             filme = Filme.get_by_id(editando_filme)
-            novo_titulo = (entry_titulo.get())
-            novo_diretor = (entry_diretor.get())
-            nova_duracao = (entry_duracao_minutos.get())
-            novo_ano = (entry_ano_lancamento.get())
+            novo_titulo = (self.entry_titulo.get())
+            novo_diretor = (self.entry_diretor.get())
+            nova_duracao = (self.entry_duracao_minutos.get())
+            novo_ano = (self.entry_ano_lancamento.get())
 
-            if not novo_titulo or not novo_diretor or not nova_duracao or not ano:
+            if not novo_titulo or not novo_diretor or not nova_duracao or not novo_ano:
                 messagebox.showerror("ERROR_sans", "É necessário inserir os valores para salvar.")
                 return
         
@@ -266,10 +266,10 @@ def preencherlistbox_filme(event):
 
         if (filme):    
             editando_filme = filme_id
-            entry_titulo.config(textvariable=(tk.StringVar(value=(filme.titulo))))
-            entry_diretor.config(textvariable=(tk.StringVar(value=(filme.diretor))))
-            entry_duracao_minutos.config(textvariable=(tk.StringVar(value=(filme.duracao_minutos))))
-            entry_ano_lancamento.config(textvariable=(tk.StringVar(value=(filme.ano_lancamento))))
+            self.entry_titulo.config(textvariable=(tk.StringVar(value=(filme.titulo))))
+            self.entry_diretor.config(textvariable=(tk.StringVar(value=(filme.diretor))))
+            self.entry_duracao_minutos.config(textvariable=(tk.StringVar(value=(filme.duracao_minutos))))
+            self.entry_ano_lancamento.config(textvariable=(tk.StringVar(value=(filme.ano_lancamento))))
             print(f"estou editando: {editando_filme}")
             
 editando_filme = None
@@ -283,26 +283,26 @@ label_titulo.grid(column=0, row=0, columnspan=2, pady=20)
 # Linha 1 - Título
 label_titulo_filme = tk.Label(frame_filme, text="Título: ", font=FONTE)
 label_titulo_filme.grid(column=0, row=1, sticky="e", padx=10, pady=5)
-entry_titulo = tk.Entry(frame_filme, font=FONTE)
-entry_titulo.grid(column=1, row=1, sticky="w", padx=10, pady=5)
+self.entry_titulo = tk.Entry(frame_filme, font=FONTE)
+self.entry_titulo.grid(column=1, row=1, sticky="w", padx=10, pady=5)
 
 # Linha 2 - Diretor
 label_diretor = tk.Label(frame_filme, text="Diretor: ", font=FONTE)
 label_diretor.grid(column=0, row=2, sticky="e", padx=10, pady=5)
-entry_diretor = tk.Entry(frame_filme, font=FONTE)
-entry_diretor.grid(column=1, row=2, sticky="w", padx=10, pady=5)
+self.entry_diretor = tk.Entry(frame_filme, font=FONTE)
+self.entry_diretor.grid(column=1, row=2, sticky="w", padx=10, pady=5)
 
 # Linha 3 - Duração
 label_duracao = tk.Label(frame_filme, text="Duração (min): ", font=FONTE)
 label_duracao.grid(column=0, row=3, sticky="e", padx=10, pady=5)
-entry_duracao_minutos = tk.Entry(frame_filme, font=FONTE)
-entry_duracao_minutos.grid(column=1, row=3, sticky="w", padx=10, pady=5)
+self.entry_duracao_minutos = tk.Entry(frame_filme, font=FONTE)
+self.entry_duracao_minutos.grid(column=1, row=3, sticky="w", padx=10, pady=5)
 
 # Linha 4 - Ano de Lançamento
 label_ano = tk.Label(frame_filme, text="Ano de Lançamento: ", font=FONTE)
 label_ano.grid(column=0, row=4, sticky="e", padx=10, pady=5)
-entry_ano_lancamento = tk.Entry(frame_filme, font=FONTE)
-entry_ano_lancamento.grid(column=1, row=4, sticky="w", padx=10, pady=5)
+self.entry_ano_lancamento = tk.Entry(frame_filme, font=FONTE)
+self.entry_ano_lancamento.grid(column=1, row=4, sticky="w", padx=10, pady=5)
 
 button_cadastrar =  tk.Button(frame_filme, text="Cadastrar", font=(FONTE), command=cadastrarFilme)
 button_cadastrar.grid(column=0, row=4, pady=30)
@@ -324,6 +324,10 @@ listbox_filme.bind('<<ListboxSelect>>', preencherlistbox_filme)
 listarFilmes()
 
 ######################################################################################
+def listarLocacao():
+    listbox_locacao.delete(0, tk.END)
+    for locacao in Locacao.select():
+        listbox_locacao.insert(locacao.id, f"{locacao.id} : : o(a) cliente ''{locacao.cliente.nome}'' alocou o filme ''{locacao.filme.titulo}''")
 
 def salvarLocacao():
     try:
@@ -353,7 +357,7 @@ def salvarLocacao():
             messagebox.showinfo("Sucesso", f"Locacao entre '{nova_locacao.cliente.nome}' e '{nova_locacao.filme.titulo}' salva com sucesso!")
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao salvar a locação: {e}")
-
+            
 # Criar um label para cliente
 label_cliente = tk.Label(frame_locacao, text="Cliente:")
 label_cliente.grid(row=0, column=0, padx=10, pady=10, sticky="e")
@@ -374,5 +378,15 @@ combobox_filme.grid(row=1, column=1, padx=10, pady=10, sticky="we")
 button_salvar = tk.Button(frame_locacao, text="Salvar", command=salvarLocacao)
 button_salvar.grid(row=3, column=0, pady=20)
 
+listbox_locacao = tk.Listbox(frame_locacao, width=85, height=25)
+listbox_locacao.grid(column=0, row=5, columnspan=3, padx=10)
+
+listarLocacao()
+
 janela.config(menu=menubar)
 janela.mainloop()
+
+
+
+if __name__ == "__main__":
+    sistema = Locadora()
